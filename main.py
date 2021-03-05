@@ -68,3 +68,24 @@ while True:
         gradient = g.gradient(loss, weights) # backpropagation
 
     weights = weights - lr * graident
+
+# Gradient Descent Algos:
+# SGD, Adam, Adadelta, Adagrad, RMSProp
+# tf.keras.optimizers.SGD, Adam, etc..
+# ruder.io/optimizers-gradient-descent/
+
+# Putting it together
+
+model = tf.keras.Sequential([...])
+
+optimizer = tf.keras.optimizer.SGD()
+
+while True:
+    prediction = model(x)
+
+    with tf.GradientTape() as tape:
+
+        loss = compute_loss(y, prediction)
+
+    grads = tape.gradient(loss, model.trainable_variables)
+    optimizer.apply_gradients(zip(grads, model.trainable_variables))
