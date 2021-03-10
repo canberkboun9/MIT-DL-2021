@@ -89,3 +89,51 @@ while True:
 
     grads = tape.gradient(loss, model.trainable_variables)
     optimizer.apply_gradients(zip(grads, model.trainable_variables))
+
+# Regularization
+# to aviod over fitting. types: Dropout, Early Stopping
+tf.keras.layers.Dropout(p=0.5)
+# LECTURE 2
+
+# RNN Intuition (pseudo code ofc)
+
+my_rnn = RNN()  # Initialize my RNN
+hidden_state = [0,0,0,0]  # Init my hidden state
+
+sentence = ["I","love","recurrent","neural"]
+
+for word in sentence:
+    prediction, hidden_state = my_rnn(word, hidden_state)
+
+next_word_prediction = prediction  # >>> "networks!"
+
+# RNNs from Scratch
+
+class MyRNNCell(tf.keras.layers.Layer):
+    def __init__(self, rnn_units, input_dim, output_dim):
+        super(MyRNNCell, self).__init__()
+
+        # Initialize weight matrices
+        self.W_xh = self.add_weight([rnn_units, input_dim])
+        self.W_hh = self.add_weight([rnn_units, rnn_units])
+        self.W_hy = self.add_weight([output_dim, input_dim])
+
+        # Initialize hidden state to zeros
+        self.h = tf.zeros([rnn_units, 1])
+
+    def call(self, x):
+        # Update the hidden state
+        self.h = tf.math.tanh(self.W_hh * self.h + self.W_xh * x)
+
+        # Compute the output
+        output = self.W_hy * self.h
+
+        # Return the current output and hidden state
+        return output, self.h
+# This gives a sense of breaks down how we define the forward pass
+# through an RNN in code using TF, but conveniently TF has already implemented
+# these types of RNN Cells for us
+
+
+tf.keras.layers.SimpleRNN(rnn_units)
+
